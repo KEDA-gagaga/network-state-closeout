@@ -1,4 +1,4 @@
 interface:
   display_name: "Network State"
-  short_description: "自主维护、强制同步并校验已确认的私人网络状态与排错记录"
-  default_prompt: "Use $network-state to synchronize first, answer my request, and autonomously record any confirmed durable network-state facts."
+  short_description: "按需读取卡片并选择仅本地保存或 GitHub 私人同步"
+  default_prompt: "Use $network-state to read only relevant private cards, update confirmed facts directly, and use either local-only saving or GitHub private synchronization as requested."

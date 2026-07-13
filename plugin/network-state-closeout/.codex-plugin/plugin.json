@@ -1,7 +1,7 @@
 {
   "name": "network-state-closeout",
-  "version": "0.1.0-pre.6",
-  "description": "Guide private network-state initialization, autonomously maintain verified records, and reconcile status/process cards through a traceable private handoff ledger.",
+  "version": "0.1.0-pre.7",
+  "description": "Initialize a private global network-state skill, maintain categorized cards with progressive loading, and optionally synchronize it across devices through GitHub private repositories.",
   "author": {
     "name": "Network State Closeout contributors"
   },
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Network State + Closeout Cards",
     "shortDescription": "Maintain private network facts and close out completed actions.",
-    "longDescription": "Guide first-time private network-state setup, optionally connect a GitHub private repository with a mandatory latest-state gate, autonomously maintain confirmed durable records, and reconcile completed status/process card pairs through validated receipts and a private handoff ledger.",
+    "longDescription": "Create a private global network-state skill in the active Codex cache, load only relevant device and service cards, save confirmed facts locally with minimal ceremony, optionally synchronize across devices through a GitHub private repository, and create closeout cards only for substantial completed actions.",
     "developerName": "Network State Closeout contributors",
     "category": "Productivity",
     "capabilities": [
@@ -26,10 +26,11 @@
       "Write"
     ],
     "defaultPrompt": [
-      "Use $initialize-network-state to create or adopt my private profile without scanning the network.",
-      "Use $initialize-network-state to guide me through connecting a confirmed GitHub private repository.",
-      "Use $network-state to synchronize, answer my request, autonomously record confirmed durable facts, then write and reconcile status and process cards.",
-      "Use $action-closeout-cards to create a validated network-state handoff pair for the completed action."
+      "Use $initialize-network-state to create or adopt my private global network-state skill without scanning the network.",
+      "Use $initialize-network-state to help another device clone my GitHub private skill repository into its Codex skills cache.",
+      "Use $network-state to read only relevant cards and save confirmed updates locally without network synchronization.",
+      "Use $network-state to run the GitHub private synchronization gate and publish confirmed updates.",
+      "Use $action-closeout-cards only for this substantial completed action."
     ]
   }
 }

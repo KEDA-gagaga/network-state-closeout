@@ -1,6 +1,6 @@
-# Devices
+# Device cards
 
-<!-- Copy the block below for each confirmed device. Remove this comment after initialization. -->
+<!-- Copy this block for each confirmed device. -->
 
 ## `<device-id>`
 

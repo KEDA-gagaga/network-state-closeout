@@ -1,16 +1,14 @@
-# Routine GitHub private synchronization
+# GitHub private synchronization
 
-Use this workflow only after `$initialize-network-state` has successfully enabled synchronization. The private profile directory is the only local source of truth for saved network state; the installed plugin remains separate.
+Use this only for cross-device synchronization. The active private skill in `.codex/skills` is the only working source. GitHub is the current transport between devices.
 
-## Hard gate
+## Fast gate
 
-Before every saved-state query, verification, diagnosis, update, commit, or synchronization:
-
-1. Read `profile.md` and obtain the configured remote alias and branch.
-2. Confirm the working directory is the configured private profile and not the plugin directory.
-3. Require a clean worktree.
-4. Compare the remote branch commit with local `HEAD`. When they differ, fetch and integrate by fast-forward only.
-5. Run the profile validator before using the records.
+1. Read the remote alias and branch from `profile.md`.
+2. Confirm the working directory is the active private skill and the worktree is clean.
+3. Compare the remote branch commit with local `HEAD`.
+4. If equal, continue immediately. If different, fetch and integrate by fast-forward only.
+5. Run `validate_profile.py`.
 
 ```bash
 git status --short
@@ -18,53 +16,30 @@ git ls-remote --exit-code <remote> refs/heads/<branch>
 git rev-parse HEAD
 git fetch <remote> <branch>
 git merge --ff-only <remote>/<branch>
-python3 <network-state-skill-directory>/scripts/validate_profile.py --path <state-directory>
+python3 <network-state-skill-directory>/scripts/validate_profile.py --path <private-skill-directory>
 ```
 
-When `ls-remote` and `HEAD` already match, skip fetch and continue to validation. Otherwise fetch before comparing or merging histories.
+Stop on an unclean worktree, uncertain remote, failed validation, or diverged history.
 
-Stop when:
+## Publish an update
 
-- the worktree is not clean;
-- the remote identity or private visibility is uncertain;
-- the remote branch cannot be read;
-- the local and remote histories have diverged;
-- validation fails.
-
-Do not answer from an unsynchronized local copy after a hard-gate failure.
-
-## Push a confirmed update
-
-Enabling synchronization with `State update policy: autonomous-confirmed-facts` authorizes routine ordinary commits and pushes of validator-approved state files. Do not request confirmation for each update. Separate authorization is still required to create or replace a repository, change the remote identity, rewrite history, or clean sensitive material from history.
-
-1. Complete the hard gate before editing.
-2. Write only confirmed durable facts.
-3. Run `validate_profile.py`.
-4. Stage only the known state files.
-5. Inspect the staged file list and diff.
-6. Commit with a concise summary.
-7. Fetch again and verify that the remote branch is contained in local history.
-8. Use a normal push.
-
-Skip the commit and push when no approved state file changed.
+After the gate:
 
 ```bash
-git add -- .gitignore profile.md devices.md services.md access-paths.md topology.md troubleshooting.md glossary.md handoffs.md
+git add -- .gitignore SKILL.md profile.md references/devices.md references/services.md references/access-paths.md references/topology.md references/troubleshooting.md references/glossary.md
 git diff --cached --check
 git diff --cached --name-only
 git diff --cached
-git commit -m "<concise state summary>"
+git commit -m "<concise summary>"
 git fetch <remote> <branch>
 git merge-base --is-ancestor <remote>/<branch> HEAD
 git push <remote> HEAD:<branch>
 ```
 
-If the remote changes after the final check, the ordinary push must be rejected. Stop, synchronize again, and reassess the update.
+Ordinary confirmed updates may commit and push autonomously. Repository creation, remote replacement, history rewriting, conflict resolution, and deletion still require separate authorization.
 
-## Security rules
+## Local-only updates
 
-- Store only the approved Markdown state files, the compact `handoffs.md` receipt ledger, and `.gitignore` in the private repository.
-- Keep the remote URL in Git configuration, not `profile.md`.
-- Use SSH authentication or a system credential helper; never embed credentials in the remote URL.
-- Do not use `git add --all`, force push, automatic conflict resolution, or tags that preserve accidentally committed sensitive material.
-- If sensitive material reaches GitHub, remove it from current files, rotate the affected credential, and treat history cleanup as a separate explicitly authorized task.
+A local-only update does not run the gate, fetch, or push. Validate it and create a normal local commit in the active cache. Before a later push, run this complete gate again; stop if another device created a divergent history.
+
+Never embed credentials in the remote URL, force-push, automatically resolve conflicts, or store credentials in the private skill.

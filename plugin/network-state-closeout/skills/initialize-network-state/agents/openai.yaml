@@ -1,4 +1,4 @@
 interface:
   display_name: "Initialize Network State"
-  short_description: "引导初始化私人网络状态、唯一资料目录与 GitHub 私人同步"
-  default_prompt: "Use $initialize-network-state to guide me through creating or adopting a private network-state profile and optionally enabling GitHub private synchronization."
+  short_description: "初始化全局私人网络 skill，并引导其他设备从私人仓库安装"
+  default_prompt: "Use $initialize-network-state to create or adopt my private global network-state skill and optionally connect another device through GitHub private synchronization."

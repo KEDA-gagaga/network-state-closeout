@@ -1,88 +1,64 @@
 # GitHub private synchronization onboarding
 
-Read this module only after the user chooses GitHub private synchronization. It configures the private state repository; routine synchronization belongs to `$network-state`.
+GitHub private repositories are currently the supported cross-device route. The repository contains the complete private network-state skill, and every device clones it directly into its own active `.codex/skills` cache.
 
 ## Preconditions
 
-- The user has chosen a private profile directory and identified whether this is the first or an additional device.
-- The repository identity is known and its GitHub visibility is confirmed as `PRIVATE` before clone or first push.
-- Access is limited to the required people and devices.
-- SSH authentication is preferred. A system credential helper is acceptable; a credential-bearing remote URL is not.
-- The repository contains only the profile Markdown files, the compact `handoffs.md` receipt ledger, and `.gitignore`. Do not add plugin code, scripts, full card copies, raw logs, exports, evidence bundles, or credentials.
-- Repository creation is an external write. Perform it only after the user explicitly asks Codex to create the repository.
+- Confirm the repository identity and `PRIVATE` visibility.
+- Prefer SSH authentication or a system credential helper; never put credentials in the remote URL.
+- Keep only `SKILL.md`, `profile.md`, approved reference cards, and `.gitignore` in the repository.
+- Create a repository only after explicit user authorization.
 
-If GitHub CLI is authenticated, visibility can be checked without changing the repository:
+When available, check visibility with:
 
 ```bash
 gh repo view <owner>/<repository> --json visibility,nameWithOwner
 ```
 
-The required signal is `"visibility":"PRIVATE"`. If the CLI is unavailable, rely on the user's direct confirmation from GitHub. Stop when privacy or repository identity is uncertain.
-
 ## First device
 
-Create or adopt and validate the local profile before Git initialization. The GitHub repository must be empty.
-
-If the user explicitly requests repository creation and GitHub CLI is authenticated, create it as private without cloning or pushing source files automatically:
-
-```bash
-gh repo create <owner>/<repository> --private
-```
-
-Confirm `PRIVATE` visibility after creation. Then update `profile.md` with:
+Initialize or adopt the active private skill first. Update `profile.md`:
 
 ```text
 - Private GitHub synchronization: enabled
 - Git remote name: <remote>
 - Default branch: <branch>
-- State update policy: autonomous-confirmed-facts
-- Synchronization policy: required-before-query-and-update
 ```
 
-Run the profile validator before Git operations. From the private profile directory:
+Validate, then from the private skill directory:
 
 ```bash
 git init -b <branch>
 git remote add <remote> <private-repository-ssh-url>
-git add -- .gitignore profile.md devices.md services.md access-paths.md topology.md troubleshooting.md glossary.md handoffs.md
+git add -- .gitignore SKILL.md profile.md references/devices.md references/services.md references/access-paths.md references/topology.md references/troubleshooting.md references/glossary.md
 git diff --cached --check
 git diff --cached
-git commit -m "Initialize private network state"
+git commit -m "Initialize private network-state skill"
 git push -u <remote> HEAD:<branch>
 ```
 
-Inspect the staged diff before committing. If the repository is not empty, stop and reconcile it deliberately. Never overwrite it or use a force push.
+The remote repository must be empty. Stop rather than overwrite existing content.
 
 ## Additional device
 
-Verify the same repository identity and `PRIVATE` visibility first. The target directory must be absent or empty. Do not run the profile initializer before cloning:
+Install the public plugin first so its maintenance and validation workflow is available. Then clone the user's private skill repository directly into the active cache:
 
 ```bash
-git clone <private-repository-ssh-url> <state-directory>
-chmod 700 <state-directory>
-find <state-directory> -maxdepth 1 -type f -exec chmod 600 {} +
-python3 <network-state-skill-directory>/scripts/validate_profile.py --path <state-directory>
+git clone <private-repository-ssh-url> ~/.codex/skills/private-network-state
+chmod 700 ~/.codex/skills/private-network-state
+find ~/.codex/skills/private-network-state -type f -exec chmod 600 {} +
+python3 <network-state-skill-directory>/scripts/validate_profile.py \
+  --path ~/.codex/skills/private-network-state
 ```
 
-On non-POSIX systems, apply equivalent access controls. Confirm that `profile.md` names the expected remote alias, branch, and required synchronization policy.
+Codex on that device now loads the cloned global private skill. Do not keep another editable clone in Documents or a project directory.
 
-## Acceptance checks
+## Acceptance
 
-Initialization succeeds only when all applicable checks pass:
+- Repository visibility is confirmed private.
+- The active path is under `.codex/skills` and contains `SKILL.md`.
+- The remote URL contains no credential.
+- Validation passes.
+- The initial normal push or additional-device clone succeeds.
 
-- repository identity and `PRIVATE` visibility are confirmed;
-- the remote URL contains no embedded credential;
-- the profile directory is outside the installed plugin;
-- the validator passes;
-- the staged file list contains only the approved profile files;
-- the initial ordinary push succeeds, or the additional device clone matches the expected branch;
-- POSIX permissions are restored after clone.
-
-After acceptance, hand daily reads, autonomous confirmed-fact updates, commits, and synchronization to `$network-state`. The selected policy authorizes validator-approved ordinary commits and pushes without repeated confirmation. Its latest-state gate is mandatory whenever private synchronization is enabled.
-
-## Failure rules
-
-- Stop on an unclean target, existing unexpected content, uncertain remote identity, failed privacy confirmation, failed validation, diverged history, or rejected push.
-- Do not use `git add --all`, automatic conflict resolution, force push, or backup tags.
-- Do not copy the plugin directory into the private state repository.
-- If sensitive material was committed, rotate the affected credential and treat Git history cleanup as a separate explicitly authorized action.
+After setup, ordinary confirmed updates may commit and push autonomously. A local-only update may skip network access, but a later push must repeat the complete synchronization gate. Stop on uncertain identity, validation failure, rejected push, or diverged history; never force-push or auto-resolve conflicts.

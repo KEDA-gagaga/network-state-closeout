@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Initialize a private network-state profile outside the installed skill directory."""
+"""Initialize a private network-state skill in the active Codex skills cache."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ def default_state_path() -> Path:
     configured = os.environ.get("NETWORK_STATE_HOME")
     if configured:
         return Path(configured).expanduser()
-    return Path.home() / ".codex" / "network-state"
+    return Path.home() / ".codex" / "skills" / "private-network-state"
 
 
 def is_within(child: Path, parent: Path) -> bool:
@@ -27,13 +27,13 @@ def is_within(child: Path, parent: Path) -> bool:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Create a private network-state profile from the bundled empty templates."
+        description="Create a private network-state skill from the bundled empty templates."
     )
     parser.add_argument(
         "--path",
         type=Path,
         default=default_state_path(),
-        help="Private profile directory (default: NETWORK_STATE_HOME or ~/.codex/network-state)",
+        help="Private skill directory (default: NETWORK_STATE_HOME or ~/.codex/skills/private-network-state)",
     )
     return parser.parse_args()
 
@@ -62,24 +62,31 @@ def main() -> int:
     else:
         target.mkdir(parents=True, mode=0o700)
 
-    created: list[Path] = []
+    created_files: list[Path] = []
+    created_directories: list[Path] = []
     try:
-        for source in sorted(template_dir.iterdir()):
-            if not source.is_file():
+        for source in sorted(template_dir.rglob("*")):
+            relative = source.relative_to(template_dir)
+            destination = target / relative
+            if source.is_dir():
+                destination.mkdir(mode=0o700, exist_ok=True)
+                created_directories.append(destination)
                 continue
-            destination = target / source.name
+            destination.parent.mkdir(parents=True, mode=0o700, exist_ok=True)
             shutil.copyfile(source, destination)
             os.chmod(destination, 0o600)
-            created.append(destination)
+            created_files.append(destination)
         os.chmod(target, 0o700)
     except Exception:
-        for path in created:
+        for path in created_files:
             path.unlink(missing_ok=True)
+        for path in reversed(created_directories):
+            path.rmdir()
         raise
 
-    print("Initialized private network-state profile.")
+    print("Initialized private network-state skill.")
     print(f"path: {target}")
-    print("next: edit profile.md and devices.md, then run validate_profile.py")
+    print("next: edit profile.md and references/devices.md, then run validate_profile.py")
     return 0
 
 

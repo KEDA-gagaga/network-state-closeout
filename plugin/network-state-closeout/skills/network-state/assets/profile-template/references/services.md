@@ -1,6 +1,6 @@
-# Services
+# Service cards
 
-<!-- Copy the block below for each confirmed service. The device ID must exist in devices.md. -->
+<!-- Copy this block for each confirmed service. The device ID must exist in devices.md. -->
 
 ## `<device-id>` / `<service-id>`
 

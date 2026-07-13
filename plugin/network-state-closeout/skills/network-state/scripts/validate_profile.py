@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a private network-state profile without changing it."""
+"""Validate a private network-state skill without changing it."""
 
 from __future__ import annotations
 
@@ -11,13 +11,14 @@ from pathlib import Path
 
 
 REQUIRED_FILES = (
+    "SKILL.md",
     "profile.md",
-    "devices.md",
-    "services.md",
-    "access-paths.md",
-    "topology.md",
-    "troubleshooting.md",
-    "glossary.md",
+    "references/devices.md",
+    "references/services.md",
+    "references/access-paths.md",
+    "references/topology.md",
+    "references/troubleshooting.md",
+    "references/glossary.md",
 )
 
 MAX_SCAN_BYTES = 10 * 1024 * 1024
@@ -62,18 +63,18 @@ def default_state_path() -> Path:
     configured = os.environ.get("NETWORK_STATE_HOME")
     if configured:
         return Path(configured).expanduser()
-    return Path.home() / ".codex" / "network-state"
+    return Path.home() / ".codex" / "skills" / "private-network-state"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Check profile structure and scan for obvious credential material."
+        description="Check private skill structure and scan for obvious credential material."
     )
     parser.add_argument(
         "--path",
         type=Path,
         default=default_state_path(),
-        help="Private profile directory (default: NETWORK_STATE_HOME or ~/.codex/network-state)",
+        help="Private skill directory (default: NETWORK_STATE_HOME or ~/.codex/skills/private-network-state)",
     )
     return parser.parse_args()
 
@@ -102,12 +103,12 @@ def main() -> int:
     warnings: list[str] = []
 
     if not root.is_dir():
-        print(f"Profile directory does not exist: {root}", file=sys.stderr)
+        print(f"Private skill directory does not exist: {root}", file=sys.stderr)
         return 2
 
     try:
         root.relative_to(skill_dir)
-        errors.append("private profile is inside the installed skill directory")
+        errors.append("private skill is inside the installed plugin skill directory")
     except ValueError:
         pass
 
@@ -115,11 +116,6 @@ def main() -> int:
         path = root / filename
         if not path.is_file():
             errors.append(f"missing required file: {filename}")
-
-    if not (root / "handoffs.md").is_file():
-        warnings.append(
-            "handoffs.md is missing; create it from the bundled template before the first card ingestion"
-        )
 
     profile_path = root / "profile.md"
     if profile_path.is_file():
@@ -129,19 +125,8 @@ def main() -> int:
             errors.append(f"profile.md: could not read synchronization settings: {exc}")
         else:
             sync_status = profile_field(profile_text, "Private GitHub synchronization")
-            update_policy = profile_field(profile_text, "State update policy")
             remote_name = profile_field(profile_text, "Git remote name")
             default_branch = profile_field(profile_text, "Default branch")
-            sync_policy = profile_field(profile_text, "Synchronization policy")
-
-            if update_policy is None:
-                warnings.append(
-                    "profile.md: state update policy is missing; default to autonomous-confirmed-facts and add it on the next write"
-                )
-            elif update_policy != "autonomous-confirmed-facts":
-                errors.append(
-                    "profile.md: state update policy must be autonomous-confirmed-facts"
-                )
 
             if sync_status not in {"enabled", "disabled"}:
                 errors.append("profile.md: private GitHub synchronization must be enabled or disabled")
@@ -152,18 +137,10 @@ def main() -> int:
                     errors.append("profile.md: enabled synchronization requires a Git remote name")
                 if not default_branch or default_branch == "none":
                     errors.append("profile.md: enabled synchronization requires a default branch")
-                if sync_policy != "required-before-query-and-update":
-                    errors.append(
-                        "profile.md: enabled synchronization requires policy required-before-query-and-update"
-                    )
             else:
                 if remote_name != "none" or default_branch != "none":
                     errors.append(
                         "profile.md: disabled synchronization requires remote name and branch to be none"
-                    )
-                if sync_policy != "not-applicable":
-                    errors.append(
-                        "profile.md: disabled synchronization requires policy not-applicable"
                     )
 
     if (root / ".git").exists():
@@ -205,16 +182,16 @@ def main() -> int:
     if os.name == "posix":
         mode = root.stat().st_mode & 0o777
         if mode & 0o077:
-            mode_warning = f"profile directory permissions are {mode:03o}; prefer 700"
+            mode_warning = f"private skill directory permissions are {mode:03o}; prefer 700"
 
     if errors:
-        print("Profile validation failed:", file=sys.stderr)
+        print("Private skill validation failed:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         print("No files were changed.", file=sys.stderr)
         return 1
 
-    print("Profile validation passed.")
+    print("Private skill validation passed.")
     print(f"path: {root}")
     print("credential scan: no obvious matches (heuristic, not a synchronization guarantee)")
     if mode_warning:

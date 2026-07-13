@@ -1,6 +1,6 @@
-# Access paths
+# Access-path cards
 
-<!-- Copy the block below for each confirmed directional path. Both device IDs must exist in devices.md. -->
+<!-- Copy this block for each confirmed directional path. Both device IDs must exist in devices.md. -->
 
 ## `<source-id>` -> `<target-id>` / `<protocol>`
 

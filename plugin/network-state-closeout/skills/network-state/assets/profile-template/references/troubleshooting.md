@@ -1,6 +1,6 @@
-# Troubleshooting patterns
+# Troubleshooting cards
 
-<!-- Keep an entry only after the cause and verification method are confirmed and reusable. -->
+<!-- Keep a card only after the cause and verification method are confirmed and reusable. -->
 
 ## `<problem-id>`
 

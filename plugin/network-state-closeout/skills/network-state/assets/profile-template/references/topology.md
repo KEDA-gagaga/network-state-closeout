@@ -1,6 +1,6 @@
-# Network topology
+# Topology cards
 
-Use this file for stable relationships and trust boundaries that are not already clear from a single device, service, or access-path record. Do not duplicate endpoint values maintained elsewhere.
+Use these cards for stable relationships and trust boundaries not already clear from one device, service, or access path.
 
 ## Zones
 
