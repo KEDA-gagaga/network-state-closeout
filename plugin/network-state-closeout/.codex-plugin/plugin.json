@@ -1,6 +1,6 @@
 {
   "name": "network-state-closeout",
-  "version": "0.1.0-pre.3",
+  "version": "0.1.0-pre.4",
   "description": "Guide private network-state initialization, maintain and privately synchronize verified records, then produce separate status and process closeout cards.",
   "author": {
     "name": "Network State Closeout contributors"

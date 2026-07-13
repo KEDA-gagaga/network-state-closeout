@@ -1,6 +1,6 @@
 # Network State + Closeout Cards Plugin
 
-> 版本：`0.1.0-pre.3` · 组合预备发布版
+> 版本：`0.1.0-pre.4` · 组合预备发布版
 
 `network-state-closeout` 把三个职责独立、又能串联工作的 Codex skill 放进同一个插件：
 
@@ -205,3 +205,7 @@ python3 plugin/network-state-closeout/skills/network-state/scripts/validate_prof
 ## 版本状态
 
 当前版本已经具备插件清单、初始化引导 skill、日常网络状态 skill、状态卡与过程卡 skill、独立 GitHub 私人同步引导模块、强制最新检查、内容模板和本地校验能力。安装时接入用户选定的插件市场即可。
+
+## 许可证
+
+本项目使用 [MIT License](LICENSE)，允许在保留版权和许可声明的前提下使用、复制、修改和分发。
