@@ -1,4 +1,4 @@
 interface:
   display_name: "Initialize Network State"
-  short_description: "经同意采集网络结构并初始化全局私人网络 skill"
+  short_description: "Initialize private network state with consent-based discovery"
   default_prompt: "Use $initialize-network-state to create my private global network-state skill, explain the privacy boundary, and ask before collecting local network structure."

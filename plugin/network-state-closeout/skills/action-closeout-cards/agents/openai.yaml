@@ -1,4 +1,4 @@
 interface:
   display_name: "Action Closeout Cards"
-  short_description: "按证据分别判断状态卡和过程卡，拒绝无依据的形式化补写"
+  short_description: "Create only justified, evidence-backed closeout cards"
   default_prompt: "Use $action-closeout-cards to decide whether this completed action needs a status card, a process card, both, or neither, and never reconstruct an unrecorded process."

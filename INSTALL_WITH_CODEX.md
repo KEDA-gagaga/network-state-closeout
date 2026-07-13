@@ -1,112 +1,114 @@
-# 把这个仓库交给 Codex
+# Hand This Repository to Codex
 
-这份文档写给收到仓库链接的 Agent。目标是把公开组合插件安装到当前 Codex 环境，再引导用户建立自己的全局私人网络状态。
+**English** | [简体中文](INSTALL_WITH_CODEX.zh-CN.md)
 
-仓库地址：
+This document is for an agent that receives the repository link. Its goal is to install the public plugin bundle into the current Codex environment and then guide the user through creating a global private network state.
+
+Repository:
 
 ```text
 https://github.com/KEDA-gagaga/network-state-closeout
 ```
 
-## 为什么采用这种部署方式
+## Why this deployment model exists
 
-网络状态包含两类生命周期完全不同的内容：
+Network state contains two kinds of material with very different lifecycles:
 
-- **稳定能力**：分类方式、按需读取、轻量写入、隐私校验、同步门禁和收尾卡片规则。适合放在公开插件中安装和更新。
-- **动态私人资料**：真实设备、地址、端口、域名、SSH 路径、Docker 网络、反向代理、虚拟局域网、VPS 和排错结论。只属于用户自己的全局私人 skill。
+- **Stable capabilities**: Categorization, on-demand loading, lightweight writing, privacy validation, synchronization gates, and closeout-card rules. These belong in a public plugin that can be installed and upgraded.
+- **Dynamic private knowledge**: Real devices, addresses, ports, domains, SSH paths, Docker networks, reverse proxies, virtual networks, VPS infrastructure, and troubleshooting conclusions. These belong only in the user's global private skill.
 
-把两者分开可以让用户放心分享和升级插件，同时避免把真实网络信息带入公开仓库。公开插件负责“怎么读取和维护”；`~/.codex/skills/private-network-state` 负责保存“用户当前的网络是什么样”。
+Separating them lets users share and upgrade the plugin without placing real network information in a public repository. The public plugin defines how to read and maintain state; `~/.codex/skills/private-network-state` stores what the user's network currently looks like.
 
-状态卡和过程卡也不是固定配套。既有网络结构和简单事实直接进入网络卡片；只有真实过程有可靠记录，而且以后确实有回溯、排错或审计价值时，才生成过程卡。Agent 不得从当前配置反推一段并未记录的过程。
+Status cards and process cards are not a required pair. Pre-existing structure and simple facts go directly into network cards. A process card is created only when reliable records of the actual process exist and the route will retain diagnostic, audit, or troubleshooting value. An agent must never reconstruct an unrecorded process from current configuration.
 
-仓库提供 repo marketplace，因此用户只需交给 Codex 一个链接，Agent 就能识别并安装完整插件，不必猜测该复制哪个子目录。插件安装后，私人资料仍在用户设备上的 `.codex/skills` 中生成和维护。
+The repository provides a repository marketplace, so a user can hand Codex one link and the agent can identify and install the complete plugin without guessing which subdirectory to copy. After installation, private knowledge is still created and maintained under `.codex/skills` on the user's device.
 
-## 收到链接后的 Agent 流程
+## Agent workflow after receiving the link
 
-如果用户只发送了链接但没有表达安装意图，先简要说明这是一个私人网络状态组合插件，并询问是否安装。用户明确要求安装、部署或使用时，继续以下流程。
+If the user sends only the link without asking to install anything, briefly explain that it is a bundled private network-state plugin and ask whether to install it. If the user clearly asks to install, deploy, or use it, continue with the following workflow.
 
-### 1. 核对公开来源
+### 1. Verify the public source
 
-确认仓库地址、`.agents/plugins/marketplace.json`、`plugin/network-state-closeout/.codex-plugin/plugin.json` 和本文件存在。不要在这个公开仓库中创建或写入用户的私人网络资料。
+Confirm that the repository URL, `.agents/plugins/marketplace.json`, `plugin/network-state-closeout/.codex-plugin/plugin.json`, and this file exist. Never create or write the user's private network information inside this public repository.
 
-### 2. 添加仓库插件目录
+### 2. Add the repository marketplace
 
-优先使用当前 Codex 提供的插件命令：
+Prefer the plugin commands available in the current Codex environment:
 
 ```bash
 codex plugin marketplace add KEDA-gagaga/network-state-closeout
 codex plugin list --marketplace network-state-closeout
 ```
 
-如果同名插件目录已经存在，先核对它是否指向本仓库；来源不一致时停止，不要替换。
+If a marketplace with the same name already exists, verify that it points to this repository. Stop on a source mismatch; do not replace it.
 
-### 3. 安装完整组合插件
+### 3. Install the complete plugin bundle
 
 ```bash
 codex plugin add network-state-closeout@network-state-closeout
 ```
 
-不要只复制其中一个 skill，也不要把插件仓库当作私人网络资料仓库。
+Do not copy only one skill, and do not use the public plugin repository as the private network-state repository.
 
-### 4. 开启新任务
+### 4. Start a new task
 
-安装完成后，提示用户开启一个新的 Codex 任务。新安装的 skill 只保证在新任务中被发现；不要假装当前任务已经加载了它们。
+After installation, tell the user to start a new Codex task. Newly installed skills are guaranteed to be discovered only in a new task; do not pretend that the current task has already loaded them.
 
-推荐新任务提示词：
+Recommended prompt for the new task:
 
 ```text
-$initialize-network-state 帮我初始化全局私人网络状态 skill。先说明可以采集和绝不保存的信息，作出隐私承诺，再征求我同意，通过本机只读检查尽可能补全网络结构。
+$initialize-network-state Help me initialize a global private network-state skill. First explain what may be collected and what must never be saved, make the privacy promise, ask for my consent, and then use local read-only checks to fill in as much of my network structure as possible.
 ```
 
-### 5. 执行初始化引导
+### 5. Run initialization onboarding
 
-在新任务中调用 `initialize-network-state`：
+In the new task, call `initialize-network-state`:
 
-1. 默认使用 `~/.codex/skills/private-network-state`，并把它作为唯一修改真源。
-2. 先区分可以保存的网络结构与绝不保存的认证秘密。
-3. 明确承诺认证秘密不会进入文件、卡片、Git 暂存区、提交历史或远端仓库。
-4. 征得用户同意后，才从本机只读来源整理 SSH、Docker、反向代理、虚拟局域网、VPS、路由和 DNS 等结构。
-5. 主动扫描、云服务 API、提权读取或登录其他主机必须分别再次授权；获准检查其他主机时优先使用 SSH。
-6. 运行私人 skill 校验，并只报告采集类别、剩余缺口和校验结果，不在最终回复中重复私人端点。
+1. Use `~/.codex/skills/private-network-state` by default and treat it as the only editable source of truth.
+2. Distinguish structural network information that may be saved from authentication secrets that must never be saved.
+3. Make an explicit promise that authentication secrets will not enter files, cards, Git staging, commit history, or remote repositories.
+4. Only after user consent, collect SSH, Docker, reverse-proxy, virtual-network, VPS, routing, and DNS structure from local read-only sources.
+5. Active scanning, cloud APIs, elevated reads, and remote login require separate authorization for each scope. Prefer SSH when another host is authorized for inspection.
+6. Run the private-skill validator and report only collected categories, remaining gaps, and validation results without repeating private endpoints in the final response.
 
-### 6. 可选的跨设备共享
+### 6. Optional cross-device sharing
 
-只有用户明确需要让多台设备上的 Agent 共享同一份网络资料时，才引导用户准备另一个 GitHub 私人仓库。
+Only when the user wants agents on multiple devices to share the same network knowledge, guide the user through preparing a separate GitHub private repository.
 
-- 这个私人仓库保存完整的 `private-network-state` skill。
-- 这个公开插件仓库不保存任何用户网络资料。
-- 每台设备真正读取和修改的都是自己的 `~/.codex/skills/private-network-state`。
-- 其他设备先安装本插件，再把同一个私人仓库克隆到该路径。
+- The private repository stores the complete `private-network-state` skill.
+- This public plugin repository stores no user network information.
+- Each device reads and edits its own `~/.codex/skills/private-network-state`.
+- Additional devices install this plugin first, then clone the same private repository directly into that path.
 
-## 绝对安全边界
+## Absolute security boundary
 
-可以在用户同意后保存：主机名、地址、子网、路由、端口、域名、服务角色、访问关系、Docker 网络、反向代理、虚拟局域网、VPS 和验证信号。
+With user consent, the private skill may save hostnames, addresses, subnets, routes, ports, domains, service roles, access relationships, Docker networks, reverse proxies, virtual networks, VPS infrastructure, and verification signals.
 
-绝不能保存：密码、口令、token、API key、私钥内容、VPN 私钥或预共享密钥、cookie、会话、恢复码、一次性验证码、订阅地址、云凭据和含凭据 URL。
+It must never save passwords, passphrases, tokens, API keys, private-key contents, VPN private or preshared keys, cookies, sessions, recovery codes, one-time codes, subscription URLs, cloud credentials, or credential-bearing URLs.
 
-需要认证时，只保留身份文件路径、钥匙串条目名、密码管理器条目名、环境变量名或 secret manager 别名。任何认证秘密都不得进入私人 skill、状态卡、过程卡、临时文件、Git 暂存区、提交历史或远端仓库。
+When authentication is required, keep only an identity-file path, keychain item name, password-manager entry name, environment-variable name, or secret-manager alias. Authentication secrets must never enter the private skill, status cards, process cards, temporary files, Git staging, commit history, or any remote repository.
 
-## 验收
+## Acceptance checks
 
-- `codex plugin list --marketplace network-state-closeout` 能看到插件。
-- 插件安装成功，并提示用户开启新任务。
-- 新任务可以调用 `$initialize-network-state`。
-- 私人 skill 位于 `.codex/skills`，而不是项目目录或 Documents 副本。
-- 初始化前已完成隐私说明、承诺和用户授权。
-- `validate_profile.py` 校验通过。
+- `codex plugin list --marketplace network-state-closeout` shows the plugin.
+- The plugin installs successfully and the user is told to start a new task.
+- The new task can call `$initialize-network-state`.
+- The private skill is under `.codex/skills`, not a project directory or Documents copy.
+- The privacy explanation, promise, and user consent occur before initialization discovery.
+- `validate_profile.py` passes.
 
-## 更新插件
+## Update the plugin
 
-刷新仓库插件目录并重新安装：
+Refresh the repository marketplace and reinstall:
 
 ```bash
 codex plugin marketplace upgrade network-state-closeout
 codex plugin add network-state-closeout@network-state-closeout
 ```
 
-更新完成后开启新任务。
+Start a new task after the update.
 
-## 官方依据
+## Official references
 
 - [Build plugins](https://learn.chatgpt.com/docs/build-plugins)
 - [Plugins](https://learn.chatgpt.com/docs/plugins)

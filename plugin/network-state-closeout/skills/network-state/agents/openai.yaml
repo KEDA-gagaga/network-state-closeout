@@ -1,4 +1,4 @@
 interface:
   display_name: "Network State"
-  short_description: "按需读取卡片并选择仅本地保存或 GitHub 私人同步"
+  short_description: "Load cards; save locally or sync via a private GitHub repo"
   default_prompt: "Use $network-state to read only relevant private cards, update confirmed facts directly, and use either local-only saving or GitHub private synchronization as requested."

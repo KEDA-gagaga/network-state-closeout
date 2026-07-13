@@ -1,70 +1,72 @@
 # Network State + Closeout Cards Plugin
 
-> 版本：`0.1.0` · 正式版
+**English** | [简体中文](README.zh-CN.md)
 
-> 把不断变化的私人网络环境，整理成 Agent 可以跨项目使用、按需读取，并在多台设备之间共享的网络资料。
+> Version: `0.1.1` · Stable release
 
-## 让 Agent 知道“现在的网络是什么样”
+> Turn a constantly changing private network into structured knowledge that agents can use across projects, load on demand, and share across devices.
 
-还在每次打开新任务、切换项目或更换设备时，重新解释你的主机、服务、代理和访问路径？
+## Let your agent know what your network looks like now
 
-还在不同笔记与聊天记录之间翻找设备地址、反向代理、容器端口、域名、TLS 和连接关系？
+Do you still explain your hosts, services, proxies, and access paths again every time you open a new task, switch projects, or move to another device?
 
-真正的问题通常不是记录得不够多，而是不断变化的网络资料没有一份统一、可信、容易维护的来源。把所有细节直接写进一个庞大的 skill 也不理想：网络状态会变化，真实端点属于私人信息，无关内容还会占用 Agent 的上下文。
+Do you still search through notes and chat history for device addresses, reverse proxies, container ports, domains, TLS, and connection relationships?
 
-Codex 内置的 OpenAI Docs skill 给出了一个很好的参考：它不把持续变化的官方手册固化在 skill 中，而是把来源选择、时效校验、失败边界和检索路线保留为稳定工作流；真正回答问题前，再从可信来源刷新当前版本，生成可定位的目录，并读取与问题有关的章节。它追求的不是“预先保存所有知识”，而是始终保留一条通往最新知识的可靠路径。
+The real problem is usually not a lack of notes. It is the absence of one trusted, maintainable source for network information that keeps changing. Putting every detail into one large skill is not ideal either: network state changes, real endpoints are private, and unrelated material consumes the agent's context.
 
-`network-state-closeout` 把同样的思路应用到私人网络状态：插件保存分类规则、写入原则、快速校验、安全边界和同步门禁；设备、服务、地址、访问路径与排错经验则保存在用户自己的全局私人 skill 中。Agent 只读取当前问题需要的分类卡片，并直接维护任务中已经确认的稳定事实。
+The OpenAI Docs skill included with Codex offers a useful model. It does not freeze an evolving body of documentation inside the skill. Instead, it preserves stable rules for source selection, freshness checks, failure boundaries, and retrieval. Before answering, it refreshes from trusted sources, builds a navigable view, and reads only the relevant sections. The goal is not to store all knowledge in advance, but to preserve a reliable path to current knowledge.
 
-最终得到的不是一份很快过期的静态清单，而是一套轻量的私人网络知识层：同一份资料可以跨项目使用，并可通过 GitHub 私人仓库，让多台设备上的 Agent 共享同一份网络资料；每次只加载真正需要的部分。
+`network-state-closeout` applies the same idea to private network state. The public plugin stores categorization, writing rules, fast validation, security boundaries, and synchronization gates. Devices, services, addresses, access paths, and reusable troubleshooting knowledge live in the user's own global private skill. Agents read only the category cards needed for the current task and directly maintain confirmed durable facts.
 
-## 直接把链接交给 Codex
+The result is not a static inventory that quickly becomes stale. It is a lightweight private network knowledge layer that works across projects and, through a GitHub private repository, lets agents on multiple devices share the same network knowledge while loading only what each task needs.
 
-把下面这段直接发送给 Codex：
+## Hand this link directly to Codex
+
+Send the following text to Codex:
 
 ```text
-请安装并使用这个插件：
+Please install and use this plugin:
 https://github.com/KEDA-gagaga/network-state-closeout
 
-请先阅读仓库中的 INSTALL_WITH_CODEX.md，按照其中的 Agent 流程完成安装；安装后开启新任务，再引导我初始化私人网络状态。
+Read INSTALL_WITH_CODEX.md in the repository and follow its agent installation workflow. After installation, start a new task and guide me through initializing my private network state.
 ```
 
-仓库已经提供 Codex 可识别的插件目录。完整设计理由、安装命令、初始化顺序和安全边界见 [INSTALL_WITH_CODEX.md](INSTALL_WITH_CODEX.md)。
+The repository includes a Codex-compatible plugin marketplace. For the design rationale, installation commands, initialization order, and security boundaries, see [INSTALL_WITH_CODEX.md](INSTALL_WITH_CODEX.md).
 
-## 三个 skill 如何协作
+## How the three skills work together
 
-插件由三个职责清晰的 skill 组成：
+The plugin contains three skills with distinct responsibilities:
 
-- `initialize-network-state`：初始化全局私人网络状态，经同意从本机只读来源补全网络结构，或引导另一台设备接入已有的 GitHub 私人仓库。
-- `network-state`：按需读取和维护分类卡片，并选择仅本地保存或跨设备同步。
-- `action-closeout-cards`：分别判断是否需要状态卡或过程卡，只记录有长期价值且有证据支持的内容。
+- `initialize-network-state`: Initialize a global private network-state skill, optionally collect local network structure from approved read-only sources, or connect another device to an existing GitHub private repository.
+- `network-state`: Load and maintain categorized cards on demand, using either local-only saving or cross-device synchronization.
+- `action-closeout-cards`: Independently decide whether a status card or process card is justified, and record only durable, evidence-backed information.
 
-典型流程如下：
+Typical flow:
 
 ```text
-首次使用
-  -> initialize-network-state 创建或接管全局私人 skill
-  -> 说明保存边界并承诺认证秘密绝不进入文件或 Git
-  -> 经用户同意，从本机只读来源补全网络结构
-  -> 可选：连接 GitHub 私人仓库
-  -> 校验后交给 network-state
+First use
+  -> initialize-network-state creates or adopts the global private skill
+  -> explain the storage boundary and promise that authentication secrets never enter files or Git
+  -> with user consent, collect network structure from local read-only sources
+  -> optionally connect a GitHub private repository
+  -> validate and hand routine maintenance to network-state
 
-日常查询或简单更新
-  -> network-state 只读取相关分类卡片
-  -> 回答问题或直接更新已确认事实
-  -> 仅本地保存，或通过门禁后跨设备同步
+Routine query or simple update
+  -> network-state reads only the relevant category cards
+  -> answer the question or directly update a confirmed fact
+  -> save locally or synchronize across devices after the gate passes
 
-完成重要部署、迁移或排障
-  -> action-closeout-cards 分别判断是否需要状态卡或过程卡
-  -> 只有真实过程有可靠记录时才生成过程卡
-  -> network-state 把其中值得复用的稳定结论写入对应网络卡片
+Important deployment, migration, or troubleshooting completion
+  -> action-closeout-cards independently evaluates the status card and process card
+  -> create a process card only when the real process has reliable evidence
+  -> network-state writes reusable final conclusions back to the matching network cards
 ```
 
-简单的地址、端口、在线状态或验证时间变化不会触发收尾卡片，直接更新网络状态即可。盘点或导入既有网络结构也不生成过程卡，因为当前配置只能证明现在的状态，不能证明它是如何形成的。
+A simple change to an address, port, availability result, or verification time does not trigger closeout cards. Inventorying or importing pre-existing network structure does not create a process card either, because current configuration proves the current state, not how that state was produced.
 
-## 私人网络状态怎样组织
+## How private network state is organized
 
-初始化后，私人网络状态本身就是一个 Codex 全局 skill：
+After initialization, the private network state is itself a global Codex skill:
 
 ```text
 ~/.codex/skills/private-network-state/
@@ -79,97 +81,97 @@ https://github.com/KEDA-gagaga/network-state-closeout
     └── glossary.md
 ```
 
-这个 `.codex/skills` 活跃缓存是唯一允许修改、提交和同步的位置。项目目录、Documents 和其他 clone 不参与日常写入。
+This active `.codex/skills` cache is the only location that may be edited, committed, and synchronized. Project directories, Documents folders, and alternate clones are not daily working copies.
 
-每个分类文件内部由多张小卡片组成。Agent 根据问题渐进式读取：
+Each category file contains small cards. Agents load them progressively according to the task:
 
-| 问题类型 | 只读取 |
+| Question type | Read only |
 |---|---|
-| 设备、地址、路由、在线状态 | `references/devices.md` |
-| 服务、端口、域名、TLS、容器、上游 | `references/services.md` |
-| SSH、代理、VPN、中继和应用访问方向 | `references/access-paths.md` |
-| 稳定拓扑和网络边界 | `references/topology.md` |
-| 已确认、可复用的排错经验 | `references/troubleshooting.md` |
-| 用户自定义简称 | `references/glossary.md` |
+| Devices, addresses, routes, availability | `references/devices.md` |
+| Services, ports, domains, TLS, containers, upstreams | `references/services.md` |
+| SSH, proxy, VPN, relay, and application access paths | `references/access-paths.md` |
+| Stable topology and network boundaries | `references/topology.md` |
+| Confirmed reusable troubleshooting knowledge | `references/troubleshooting.md` |
+| User-specific abbreviations | `references/glossary.md` |
 
-查询一个服务不需要读取全部设备和拓扑；排查一条路径也不需要加载所有服务。这样可以减少进入 Agent 上下文的内容。
+A service query does not need the complete device inventory and topology. Diagnosing one path does not require every service card. This keeps irrelevant material out of the agent's context.
 
-## 跨项目与跨设备
+## Cross-project and cross-device use
 
-这两个概念解决的是不同问题：
+These concepts solve different problems:
 
-- **跨项目**：私人 skill 位于 Codex 的全局 `~/.codex/skills/` 中。切换到其他项目时，Agent 仍可按需读取同一份网络资料。
-- **跨设备**：另一台设备先安装本插件，再把同一个 GitHub 私人仓库直接克隆到自己的 `.codex/skills/private-network-state`。不同设备上的 Agent 因而读取和维护同一份网络资料历史。
+- **Cross-project**: The private skill lives in the global Codex directory at `~/.codex/skills/`. Agents can load the same network knowledge on demand after switching projects.
+- **Cross-device**: Another device first installs this plugin, then clones the same GitHub private repository directly into its own `.codex/skills/private-network-state`. Agents on different devices therefore read and maintain the same network knowledge history.
 
-当前版本只通过 GitHub 私人仓库进行跨设备同步。GitHub 保存跨设备共享的历史；每台设备真正读取和修改的仍是自己的 `.codex/skills` 活跃缓存。
+The current release uses GitHub private repositories as its cross-device synchronization route. GitHub stores the shared history; each device still reads and edits its own active `.codex/skills` cache.
 
-## 轻量写入与保存
+## Lightweight writing and saving
 
-任务确认了稳定事实后，Agent 可以自主更新对应卡片，不要求用户逐次选择。用户仍可明确要求某次任务不记录。
+After a task confirms a durable fact, the agent may autonomously update the matching card. The user does not have to approve each update and may still opt out for a particular task.
 
-只有完成了值得长期记录的部署、迁移、排障或配置变更，或者用户明确要求收尾时，才进入卡片判断；状态卡和过程卡不是固定配套：
+Closeout evaluation is used only for a completed deployment, migration, troubleshooting action, or configuration change that may have lasting value, or when the user explicitly requests closeout. Status cards and process cards are not a required pair:
 
-- 状态卡只在最终状态、入口、验证结果或边界值得长期引用时生成。
-- 过程卡只在实际过程有可靠记录，而且技术路线、关键决策或排查入口以后仍有价值时生成。
-- 既有网络结构、简单事实和只有当前配置但没有过程记录的情况，不生成过程卡。
-- 用户要求过程卡但证据不足时，Agent 必须说明未生成，不能猜测或补写一张形式化卡片。
-- 其中值得复用的网络事实直接写回对应分类卡片。
+- Create a status card only when the final state, entry point, verification result, or boundary deserves a durable reference.
+- Create a process card only when the actual process has reliable records and its route, decisions, or troubleshooting entry will remain useful.
+- Do not create a process card for pre-existing structure, simple facts, or a current configuration with no process record.
+- If the user requests a process card but evidence is insufficient, explain that it was omitted; never guess or create a ceremonial placeholder.
+- Write reusable network facts from the result directly into the matching category cards.
 
-删除已有记录或修改真实网络配置仍需用户明确授权。
+Deleting an existing record or changing real network configuration still requires explicit user authorization.
 
-### 仅本地保存
+### Local-only saving
 
-暂时不进行网络同步时：
+When network synchronization is not wanted for the current task:
 
-- 直接更新 `.codex/skills/private-network-state`；
-- 运行快速校验；
-- 已启用 Git 时只创建本地提交，不获取或推送远端；
-- 明确说明本次改动尚未跨设备同步。
+- Update `.codex/skills/private-network-state` directly.
+- Run the fast validator.
+- If Git is enabled, create a local commit without fetching or pushing.
+- State that the update has not been synchronized across devices.
 
-以后需要同步时，必须重新执行完整的隐私与同步门禁，不沿用之前的远端检查结果。
+Before a later synchronization, run the complete privacy and synchronization gate again instead of reusing an earlier remote check.
 
-### 跨设备同步
+### Cross-device synchronization
 
-需要多台设备保持一致时，先比较 GitHub 私人仓库的远端提交与本地提交。相同时立即继续；不同时才获取并仅快进。更新后执行校验、创建普通提交并推送。
+When multiple devices need the same current state, compare the GitHub private repository's remote commit with the local commit. Continue immediately when they match; otherwise fetch and integrate by fast-forward only. Then validate, create a normal commit, and push.
 
-仓库身份不确定、工作区不干净、校验失败、远端拒绝或历史分叉时停止。不会强制推送或自动处理分叉。
+Stop when repository identity is uncertain, the worktree is not clean, validation fails, the remote rejects the push, or histories diverge. Never force-push or automatically resolve divergence.
 
-## 开始使用
+## Getting started
 
-### 第一台设备
+### First device
 
-推荐直接调用初始化引导：
+The recommended entry point is the initialization skill:
 
 ```text
-$initialize-network-state 帮我初始化全局私人网络状态 skill。先说明可以采集和绝不保存的信息，作出隐私承诺，再征求我同意，通过本机只读检查尽可能补全网络结构。
+$initialize-network-state Help me initialize a global private network-state skill. First explain what may be collected and what must never be saved, make the privacy promise, ask for my consent, and then use local read-only checks to fill in as much of my network structure as possible.
 ```
 
-初始化引导会先区分两类信息：
+The initialization guide distinguishes two information classes:
 
-- **可以保存的网络结构**：设备别名与角色、地址、子网、路由、SSH 访问关系、Docker 网络和端口、反向代理、域名、TLS 状态、虚拟局域网、VPS 及服务依赖。
-- **绝不保存的认证秘密**：密码、口令、token、API key、私钥内容、VPN 私钥或预共享密钥、cookie、恢复码、一次性验证码、订阅地址和含凭据 URL。
+- **Network structure that may be saved**: Device aliases and roles, addresses, subnets, routes, SSH relationships, Docker networks and ports, reverse proxies, domains, TLS state, virtual networks, VPS infrastructure, and service dependencies.
+- **Authentication secrets that must never be saved**: Passwords, passphrases, tokens, API keys, private-key contents, VPN private or preshared keys, cookies, recovery codes, one-time codes, subscription URLs, and credential-bearing URLs.
 
-Codex 必须先承诺认证秘密不会进入私人 skill、状态卡、过程卡、Git 暂存区、提交历史或 GitHub 仓库，再询问是否允许读取本机配置并运行只读命令。用户拒绝时保留空白卡片继续初始化；用户同意后只整理授权范围内的结构事实。
+Codex must first promise that authentication secrets will not enter the private skill, status cards, process cards, Git staging, commit history, or GitHub repository. It then asks for permission to inspect local configuration and run read-only commands. If the user declines, initialization continues with empty cards. If the user agrees, only structural facts from the authorized scope are recorded.
 
-本机只读采集不包含主动扫描子网、调用云服务 API 或登录其他主机。这些扩展操作必须说明具体范围并再次征求授权；获准检查其他主机时优先使用 SSH。
+Local read-only discovery does not include active subnet scanning, cloud-provider API calls, or logging in to another host. Each expanded operation requires a clear scope and separate authorization. When another host is authorized for inspection, SSH is the preferred access method.
 
-也可以手动运行初始化器：
+The initializer can also be run manually:
 
 ```bash
 python3 plugin/network-state-closeout/skills/network-state/scripts/init_profile.py
 ```
 
-默认创建位置：
+Default destination:
 
 ```text
 ~/.codex/skills/private-network-state
 ```
 
-初始化器不会覆盖非空目录。
+The initializer never overwrites a non-empty directory.
 
-### 另一台设备
+### Additional device
 
-先安装本插件，再确认私人仓库身份和可见性，然后执行：
+Install this plugin first, confirm the private repository identity and visibility, then run:
 
 ```bash
 git clone <private-repository-url> ~/.codex/skills/private-network-state
@@ -177,26 +179,26 @@ python3 <network-state-skill-directory>/scripts/validate_profile.py \
   --path ~/.codex/skills/private-network-state
 ```
 
-验证通过后，Agent 会把该目录作为全局私人 skill 使用。不要再创建用于日常编辑的项目副本。
+After validation passes, the agent uses this directory as a global private skill. Do not create another project copy for daily editing.
 
-## 安全边界
+## Security boundary
 
-经用户同意，私人卡片可以保存操作所需的主机名、地址、端口、域名、路径、拓扑、服务关系和验证信号。这些结构事实只进入全局私人 skill，以及用户确认的 GitHub 私人仓库。
+With user consent, private cards may store the hostnames, addresses, ports, domains, paths, topology, service relationships, and verification signals required for operation. These structural facts belong only in the global private skill and the GitHub private repository confirmed by the user.
 
-不得保存密码、口令、token、API key、私钥内容、VPN 私钥或预共享密钥、cookie、会话、恢复码、一次性验证码、订阅地址、登录凭据或含凭据 URL。连接需要认证时，只保留身份文件路径、钥匙串条目名、密码管理器条目名、环境变量名或 secret manager 中的安全引用。
+Never save passwords, passphrases, tokens, API keys, private-key contents, VPN private or preshared keys, cookies, sessions, recovery codes, one-time codes, subscription URLs, login artifacts, or credential-bearing URLs. When a connection requires authentication, keep only an identity-file path, keychain item name, password-manager entry name, environment-variable name, or safe secret-manager reference.
 
-GitHub 仓库必须是 private。首次推送和远端身份不确定时需要确认可见性。
+The GitHub repository must be private. Confirm visibility for the first push and whenever remote identity is uncertain.
 
-## 安装整个插件
+## Install the complete plugin
 
-推荐直接让 Codex 按 [INSTALL_WITH_CODEX.md](INSTALL_WITH_CODEX.md) 操作。命令行安装入口为：
+The recommended route is to let Codex follow [INSTALL_WITH_CODEX.md](INSTALL_WITH_CODEX.md). The command-line entry point is:
 
 ```bash
 codex plugin marketplace add KEDA-gagaga/network-state-closeout
 codex plugin add network-state-closeout@network-state-closeout
 ```
 
-安装后开启新任务，再调用 `$initialize-network-state`。
+Start a new task after installation, then call `$initialize-network-state`.
 
 ```text
 plugin/network-state-closeout/
@@ -207,9 +209,9 @@ plugin/network-state-closeout/
     └── action-closeout-cards/
 ```
 
-正式安装时应安装整个 `plugin/network-state-closeout`，不要只复制其中一个 skill。
+Install the complete `plugin/network-state-closeout` directory. Do not copy only one skill.
 
-## 校验
+## Validation
 
 ```bash
 python3 /path/to/plugin-creator/scripts/validate_plugin.py \
@@ -225,7 +227,7 @@ python3 /path/to/skill-creator/scripts/quick_validate.py \
   plugin/network-state-closeout/skills/action-closeout-cards
 ```
 
-初始化测试：
+Initialization test:
 
 ```bash
 python3 plugin/network-state-closeout/skills/network-state/scripts/init_profile.py \
@@ -235,6 +237,6 @@ python3 plugin/network-state-closeout/skills/network-state/scripts/validate_prof
   --path /tmp/private-network-state-test
 ```
 
-## 许可证
+## License
 
-本项目使用 [MIT License](LICENSE)。
+This project is licensed under the [MIT License](LICENSE).

@@ -45,7 +45,7 @@ SECRET_PATTERNS = (
 )
 
 RELATIVE_DEVICE_PATTERN = re.compile(
-    r"(?im)^#{2,6}\s+(?:this machine|current machine|local machine|本机|这台机器|当前机器)\s*$"
+    r"(?im)^#{2,6}\s+(?:this machine|current machine|local machine|\u672c\u673a|\u8fd9\u53f0\u673a\u5668|\u5f53\u524d\u673a\u5668)\s*$"
 )
 
 
