@@ -2,7 +2,7 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-> Version: `0.1.1` · Stable release
+> Version: `0.1.2` · Stable release
 
 > Turn a constantly changing private network into structured knowledge that agents can use across projects, load on demand, and share across devices.
 

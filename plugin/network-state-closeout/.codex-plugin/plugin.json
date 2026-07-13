@@ -1,6 +1,6 @@
 {
   "name": "network-state-closeout",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Initialize a private global network-state skill with consent-based discovery, maintain categorized cards with progressive loading, and optionally synchronize it across devices through GitHub private repositories.",
   "author": {
     "name": "Network State Closeout contributors"

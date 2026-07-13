@@ -1,7 +1,5 @@
 # Hand This Repository to Codex
 
-**English** | [简体中文](INSTALL_WITH_CODEX.zh-CN.md)
-
 This document is for an agent that receives the repository link. Its goal is to install the public plugin bundle into the current Codex environment and then guide the user through creating a global private network state.
 
 Repository:
