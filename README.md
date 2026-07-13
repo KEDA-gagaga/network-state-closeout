@@ -2,23 +2,29 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-> Version: `0.1.2` · Stable release
+> Version: `0.1.3` · Stable release
 
-> Turn a constantly changing private network into structured knowledge that agents can use across projects, load on demand, and share across devices.
+> Turn a constantly changing private network into a knowledge layer that Codex can use across projects, load on demand, and maintain over time—kept local or optionally shared across devices through a GitHub private repository.
 
-## Let your agent know what your network looks like now
+## Let Codex know what your network looks like now
 
-Do you still explain your hosts, services, proxies, and access paths again every time you open a new task, switch projects, or move to another device?
+Still struggling to keep a complex network state organized?
 
-Do you still search through notes and chat history for device addresses, reverse proxies, container ports, domains, TLS, and connection relationships?
+Still explaining your hosts, services, proxies, and access paths one by one every time you open a new task, switch projects, or move to another device?
 
-The real problem is usually not a lack of notes. It is the absence of one trusted, maintainable source for network information that keeps changing. Putting every detail into one large skill is not ideal either: network state changes, real endpoints are private, and unrelated material consumes the agent's context.
+Still digging through notes and chat history to reconstruct every device's Tailscale IP, Nginx reverse proxy, Docker ports, domains, TLS, and connection paths?
+
+The real problem is not that you have failed to remember enough. It is that constantly changing network knowledge has no single trusted, maintainable source. Freezing every detail inside one large skill is not the answer either: network state changes, real endpoints are private, and stale or irrelevant material consumes the agent's context.
 
 The OpenAI Docs skill included with Codex offers a useful model. It does not freeze an evolving body of documentation inside the skill. Instead, it preserves stable rules for source selection, freshness checks, failure boundaries, and retrieval. Before answering, it refreshes from trusted sources, builds a navigable view, and reads only the relevant sections. The goal is not to store all knowledge in advance, but to preserve a reliable path to current knowledge.
 
-`network-state-closeout` applies the same idea to private network state. The public plugin stores categorization, writing rules, fast validation, security boundaries, and synchronization gates. Devices, services, addresses, access paths, and reusable troubleshooting knowledge live in the user's own global private skill. Agents read only the category cards needed for the current task and directly maintain confirmed durable facts.
+`network-state-closeout` borrows this model for private network state that needs long-term maintenance. Stable categorization, writing rules, fast validation, security boundaries, and synchronization gates stay in the public plugin. Changing devices, services, addresses, access paths, and reusable troubleshooting knowledge live in the user's own global private skill and can be shared across devices through a GitHub private repository. Codex reads only the category cards needed for the current task and autonomously maintains confirmed durable facts.
 
-The result is not a static inventory that quickly becomes stale. It is a lightweight private network knowledge layer that works across projects and, through a GitHub private repository, lets agents on multiple devices share the same network knowledge while loading only what each task needs.
+Scattered facts—Tailscale device addresses, Nginx reverse proxies, domains, TLS, Docker containers and ports, SSH, VPNs, and cross-device access paths—become maintainable network cards that are loaded only when needed.
+
+Routine confirmed facts go directly into network cards. Status cards and process cards are evaluated independently only when a completed action has lasting closeout value, and a process card also requires reliable evidence of the real process.
+
+The result is not a static inventory that quickly becomes stale, but a private knowledge workflow that evolves with the environment: state stays in the user's own global private skill and can remain local; capabilities are reused through the plugin; and only when private GitHub synchronization is enabled do agents on multiple devices share the same network knowledge. Each task still loads only the relevant facts into context.
 
 ## Hand this link directly to Codex
 
