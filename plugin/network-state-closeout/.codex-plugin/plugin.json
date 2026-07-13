@@ -1,6 +1,6 @@
 {
   "name": "network-state-closeout",
-  "version": "0.1.0-pre.12",
+  "version": "0.1.0-pre.13",
   "description": "Initialize a private global network-state skill with consent-based discovery, maintain categorized cards with progressive loading, and optionally synchronize it across devices through GitHub private repositories.",
   "author": {
     "name": "Network State Closeout contributors"
@@ -20,8 +20,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Network State + Closeout Cards",
-    "shortDescription": "Maintain private network facts and close out completed actions.",
-    "longDescription": "Create a private global network-state skill in the active Codex cache, ask before discovering local SSH, Docker, reverse-proxy, virtual-network, and VPS structure, load only relevant cards, save confirmed facts locally, optionally synchronize through a GitHub private repository, and create closeout cards only for substantial completed actions.",
+    "shortDescription": "Maintain private network facts and evidence-backed closeout cards.",
+    "longDescription": "Create a private global network-state skill in the active Codex cache, ask before discovering local SSH, Docker, reverse-proxy, virtual-network, and VPS structure, load only relevant cards, optionally synchronize through a GitHub private repository, and create status or process cards only when each is independently justified by lasting value and reliable evidence.",
     "developerName": "Network State Closeout contributors",
     "category": "Productivity",
     "capabilities": [
@@ -33,7 +33,7 @@
       "Use $initialize-network-state to help another device clone my GitHub private skill repository into its Codex skills cache.",
       "Use $network-state to read only relevant cards and save confirmed updates locally without network synchronization.",
       "Use $network-state to run the GitHub private synchronization gate and publish confirmed updates.",
-      "Use $action-closeout-cards only for this substantial completed action."
+      "Use $action-closeout-cards to decide whether this completed action needs a status card, a process card, both, or neither; never reconstruct an unrecorded process."
     ]
   }
 }

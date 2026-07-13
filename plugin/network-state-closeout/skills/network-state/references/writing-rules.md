@@ -21,8 +21,9 @@ Use one clear heading per stable object or relationship. Use `<device-id> / <ser
 2. Write a simple confirmed fact directly into its card.
 3. Replace superseded values and keep `unknown` when evidence is missing.
 4. Do not delete a fact merely because another note omits it.
-5. Use `$action-closeout-cards` only for requested or substantial closeout work; copy final reusable facts directly into the matching cards.
-6. Run `scripts/validate_profile.py` after writing.
+5. Discovery or import of pre-existing structure updates network cards directly and does not create a process card.
+6. Use `$action-closeout-cards` only for completed work with lasting closeout value. Judge status and process cards independently; create a process card only from reliable records of the actual route.
+7. Run `scripts/validate_profile.py` after writing.
 
 Do not store chat history, command transcripts, temporary failures, full logs, configuration dumps, discarded designs, or general networking tutorials.
 

@@ -1,5 +1,7 @@
 # Card templates
 
+Use only the template justified by the decision in `SKILL.md`. Never instantiate the process template until the process-card evidence gate passes. Delete unused sections; do not leave placeholders.
+
 ## Status card
 
 ```markdown
@@ -39,41 +41,44 @@
 
 ## Process card
 
-````markdown
+Use this only for a process supported by direct observation or reliable records.
+
+```markdown
 # <Action or service> process card
 
-## Purpose
+## Evidence basis
 
-Preserve the implementation route, audit points, and troubleshooting entry without reproducing a command log.
+- <Task actions, configuration diff, change record, runbook, or user-provided process notes>
 
-## Architecture flow
+## Goal and result
 
-```text
-client -> entry point -> service component -> data or configuration -> external dependency
-```
+- <What the action set out to change and what it actually achieved>
 
-## Critical route
+## Actual technical route
 
-1. <Core approach>
-2. <Deployment or runtime model>
-3. <Domain, certificate, port, route, or network boundary>
-4. <Configuration, credential reference, storage, or dependency>
-5. <Client integration and final verification>
+1. <Evidence-backed change or decision>
+2. <Evidence-backed implementation step or dependency>
+3. <Evidence-backed integration and verification>
 
-## Audit points
+## Key decisions and constraints
 
-| Item | Current value or location | Diagnostic meaning |
+- <Why this route was used, only when recorded>
+
+## Changed locations and dependencies
+
+| Item | Actual location or dependency | Diagnostic meaning |
 |---|---|---|
 | Entry point |  |  |
 | Configuration |  |  |
-| Credential storage | <Path, variable, or alias only> |  |
+| Credential reference | <Path, variable, or alias only> |  |
 | External dependency |  |  |
 
-## Troubleshooting entry
+## Verification and troubleshooting
 
-- <Symptom>: check <critical location or signal> first.
+- Verification: <Observed result>
+- If <symptom>, check <recorded critical location or signal> first.
 
 ## Boundaries
 
 - <Explicitly unaffected scope>
-````
+```

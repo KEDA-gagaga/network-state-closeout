@@ -27,7 +27,8 @@ Do not load all cards for a narrow request.
 - Create a new card only for a stable object, relationship, or reusable diagnosis worth keeping.
 - Replace superseded values; do not preserve a change narrative.
 - Autonomously maintain confirmed durable facts unless the user opts out for the task.
-- Use `$action-closeout-cards` only when the user asks for closeout cards or a completed deployment, migration, repair, or configuration change is worth long-term audit. Copy only its final reusable facts into the matching network cards.
+- Do not use closeout cards for discovery or import of pre-existing network structure; update the matching network cards directly.
+- Use `$action-closeout-cards` only when a completed action has lasting closeout value. Status and process cards are judged independently, and a process card requires reliable evidence of the actual route; never reconstruct one from current state. Copy only final reusable facts into the matching network cards.
 
 ## Choose one save route
 
