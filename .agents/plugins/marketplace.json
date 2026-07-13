@@ -1,0 +1,20 @@
+{
+  "name": "network-state-closeout",
+  "interface": {
+    "displayName": "Network State Closeout"
+  },
+  "plugins": [
+    {
+      "name": "network-state-closeout",
+      "source": {
+        "source": "local",
+        "path": "./plugin/network-state-closeout"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
