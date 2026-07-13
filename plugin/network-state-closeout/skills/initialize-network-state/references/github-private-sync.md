@@ -8,7 +8,7 @@ Read this module only after the user chooses GitHub private synchronization. It 
 - The repository identity is known and its GitHub visibility is confirmed as `PRIVATE` before clone or first push.
 - Access is limited to the required people and devices.
 - SSH authentication is preferred. A system credential helper is acceptable; a credential-bearing remote URL is not.
-- The repository contains only the profile Markdown files and `.gitignore`. Do not add plugin code, scripts, raw logs, exports, evidence bundles, or credentials.
+- The repository contains only the profile Markdown files, the compact `handoffs.md` receipt ledger, and `.gitignore`. Do not add plugin code, scripts, full card copies, raw logs, exports, evidence bundles, or credentials.
 - Repository creation is an external write. Perform it only after the user explicitly asks Codex to create the repository.
 
 If GitHub CLI is authenticated, visibility can be checked without changing the repository:
@@ -44,7 +44,7 @@ Run the profile validator before Git operations. From the private profile direct
 ```bash
 git init -b <branch>
 git remote add <remote> <private-repository-ssh-url>
-git add -- .gitignore profile.md devices.md services.md access-paths.md topology.md troubleshooting.md glossary.md
+git add -- .gitignore profile.md devices.md services.md access-paths.md topology.md troubleshooting.md glossary.md handoffs.md
 git diff --cached --check
 git diff --cached
 git commit -m "Initialize private network state"

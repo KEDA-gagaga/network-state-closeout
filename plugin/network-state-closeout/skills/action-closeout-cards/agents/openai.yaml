@@ -1,4 +1,4 @@
 interface:
   display_name: "Action Closeout Cards"
-  short_description: "为已完成的动作生成独立状态卡、技术路线过程卡和审计入口"
-  default_prompt: "Use $action-closeout-cards to write separate status and process cards for the action that just finished."
+  short_description: "生成状态卡、过程卡及可回写网络状态的结构化交接"
+  default_prompt: "Use $action-closeout-cards to write separate status and process cards, validate their network-state handoff when relevant, and reconcile it through $network-state."

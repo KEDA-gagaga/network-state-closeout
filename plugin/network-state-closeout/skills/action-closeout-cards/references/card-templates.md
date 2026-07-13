@@ -42,6 +42,37 @@ Use these templates as a structural baseline. Adapt labels to the project's lang
 
 Exclude deployment steps, command lists, failed attempts, detailed tutorials, and sensitive values.
 
+For network-related work, append this section before finalizing the card:
+
+```markdown
+## Network-state handoff
+
+| Field | Value |
+|---|---|
+| Handoff ID | `<yyyymmdd-action-sequence>` |
+| Card role | `status` |
+| Ingestion state | `pending` |
+| Detail level | `<private-or-alias-only>` |
+| Verified at | `<ISO-8601 timestamp>` |
+| Verification method | `<user-confirmed, observed, or config-confirmed>` |
+| Target records | `<semicolon-separated target files and stable headings>` |
+| Applied at | `unknown` |
+| Applied targets | `none` |
+| Network-state validation | `pending` |
+| Network-state commit | `none` |
+| Block reason | `none` |
+
+### Durable state candidates
+
+| Target | Field | Final value | Verification signal |
+|---|---|---|---|
+| `<target file and stable heading>` | `<field>` | `<confirmed current value>` | `<concise redacted signal>` |
+
+### Ingestion receipt
+
+Pending reconciliation by `$network-state`.
+```
+
 ## Process card
 
 ````markdown
@@ -86,6 +117,39 @@ client -> entry point -> service component -> data or configuration -> external 
 
 Exclude full commands, install logs, temporary debug output, click-by-click UI records, discarded designs, and sensitive values.
 
+For network-related work, append this section before finalizing the card. Reuse the status card's handoff ID, state, detail level, timestamp, and verification method:
+
+```markdown
+## Network-state handoff
+
+| Field | Value |
+|---|---|
+| Handoff ID | `<yyyymmdd-action-sequence>` |
+| Card role | `process` |
+| Ingestion state | `pending` |
+| Detail level | `<private-or-alias-only>` |
+| Verified at | `<ISO-8601 timestamp>` |
+| Verification method | `<user-confirmed, observed, or config-confirmed>` |
+| Target records | `<semicolon-separated target files and stable headings>` |
+| Applied at | `unknown` |
+| Applied targets | `none` |
+| Network-state validation | `pending` |
+| Network-state commit | `none` |
+| Block reason | `none` |
+
+### Durable route and troubleshooting candidates
+
+| Target | Candidate type | Durable content | Verification signal |
+|---|---|---|---|
+| `<target file and stable heading>` | `<access-path, topology, dependency, or troubleshooting>` | `<confirmed reusable mechanism>` | `<concise redacted signal>` |
+
+### Ingestion receipt
+
+Pending reconciliation by `$network-state`.
+```
+
+After ingestion, set the same final state in both cards. For `applied`, fill `Applied at`, `Applied targets`, `Network-state validation`, and `Network-state commit`; for `blocked`, fill `Block reason`; for `skipped`, explain the no-change result in the receipt. Keep the private handoff ledger authoritative if the cards cannot be edited.
+
 ## Mapping confirmed network facts into cards
 
 | Confirmed network fact | Status card | Process card |
@@ -100,4 +164,4 @@ Exclude full commands, install logs, temporary debug output, click-by-click UI r
 | Credential reference | Private configuration reference only | Secret-storage reference only |
 | Private GitHub synchronization | Mention only when it affects current availability | Remote alias, branch, validation result, and final commit identifier |
 
-Do not copy a full device list, address table, topology, or troubleshooting catalog. Include exact addresses or domains only when they are necessary for operation, the user expects them in the card, and the destination is private.
+Do not copy a full device list, address table, topology, or troubleshooting catalog. Use `Detail level: private` only when the destination is confirmed private and exact endpoints are operationally necessary. Otherwise use `alias-only`, which permits stable device, service, path, and secret-manager references but no exact IP address, MAC address, or concrete URL.

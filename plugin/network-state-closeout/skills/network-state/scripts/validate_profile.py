@@ -116,6 +116,11 @@ def main() -> int:
         if not path.is_file():
             errors.append(f"missing required file: {filename}")
 
+    if not (root / "handoffs.md").is_file():
+        warnings.append(
+            "handoffs.md is missing; create it from the bundled template before the first card ingestion"
+        )
+
     profile_path = root / "profile.md"
     if profile_path.is_file():
         try:

@@ -1,6 +1,6 @@
 # Network state profile
 
-- Schema version: 1
+- Schema version: 2
 - Profile name: `<choose-a-local-name>`
 - Data classification: private
 - Scope: `<home, lab, small office, or another concise boundary>`
