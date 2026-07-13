@@ -1,4 +1,4 @@
 interface:
   display_name: "Network State"
-  short_description: "维护、强制同步并校验已初始化的私人网络状态与排错记录"
-  default_prompt: "Use $network-state to synchronize first, then query or update my initialized private network-state records."
+  short_description: "自主维护、强制同步并校验已确认的私人网络状态与排错记录"
+  default_prompt: "Use $network-state to synchronize first, answer my request, and autonomously record any confirmed durable network-state facts."

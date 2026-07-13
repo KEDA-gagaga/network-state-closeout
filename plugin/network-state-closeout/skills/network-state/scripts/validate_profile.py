@@ -124,9 +124,19 @@ def main() -> int:
             errors.append(f"profile.md: could not read synchronization settings: {exc}")
         else:
             sync_status = profile_field(profile_text, "Private GitHub synchronization")
+            update_policy = profile_field(profile_text, "State update policy")
             remote_name = profile_field(profile_text, "Git remote name")
             default_branch = profile_field(profile_text, "Default branch")
             sync_policy = profile_field(profile_text, "Synchronization policy")
+
+            if update_policy is None:
+                warnings.append(
+                    "profile.md: state update policy is missing; default to autonomous-confirmed-facts and add it on the next write"
+                )
+            elif update_policy != "autonomous-confirmed-facts":
+                errors.append(
+                    "profile.md: state update policy must be autonomous-confirmed-facts"
+                )
 
             if sync_status not in {"enabled", "disabled"}:
                 errors.append("profile.md: private GitHub synchronization must be enabled or disabled")

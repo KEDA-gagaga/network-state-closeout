@@ -35,6 +35,7 @@ Confirm `PRIVATE` visibility after creation. Then update `profile.md` with:
 - Private GitHub synchronization: enabled
 - Git remote name: <remote>
 - Default branch: <branch>
+- State update policy: autonomous-confirmed-facts
 - Synchronization policy: required-before-query-and-update
 ```
 
@@ -77,7 +78,7 @@ Initialization succeeds only when all applicable checks pass:
 - the initial ordinary push succeeds, or the additional device clone matches the expected branch;
 - POSIX permissions are restored after clone.
 
-After acceptance, hand daily reads, updates, commits, and synchronization to `$network-state`. Its latest-state gate is mandatory whenever private synchronization is enabled.
+After acceptance, hand daily reads, autonomous confirmed-fact updates, commits, and synchronization to `$network-state`. The selected policy authorizes validator-approved ordinary commits and pushes without repeated confirmation. Its latest-state gate is mandatory whenever private synchronization is enabled.
 
 ## Failure rules
 

@@ -17,7 +17,7 @@ Do not mix the two responsibilities.
 
 1. Confirm that the action has reached a final state and identify its service, requirement, version, host, entry point, configuration, and deliverable.
 2. Read project-local instructions such as `AGENTS.md`. If an Obsidian project context index exists, read `01 项目入口与版本历史.md` and `04 当前范围与执行状态.md` before writing.
-3. For network-related work, use `$network-state` only when saved network facts are relevant. Update the private network profile only when the user requested it and the facts are confirmed; run its validator before using those facts in cards.
+3. For network-related work, use `$network-state` only when saved network facts are relevant. Let it autonomously maintain confirmed durable facts unless the user asked not to record them; run its validator before using those facts in cards.
 4. Inspect existing `docs/` naming and numbering. Reuse the project convention without renaming existing documents.
 5. Read `references/card-templates.md` and create one status card plus one process card.
 6. Register links in an existing project status index when that convention already exists. For an Obsidian project context index, update `04 当前范围与执行状态.md`. Keep only the final service state and the two card links in the index.

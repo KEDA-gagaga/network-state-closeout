@@ -1,6 +1,6 @@
 ---
 name: network-state
-description: Maintain, query, verify, update, and privately synchronize an initialized user's network-state records for devices, addresses, host services, ports, domains, TLS, containers, VPN or overlay routes, SSH or other access paths, network topology, and reusable troubleshooting patterns. Use when a task depends on saved facts about the user's own network, when deciding where a newly confirmed network fact belongs, when diagnosing a recorded path, when synchronizing initialized private state, or when confirmed network facts must feed an action-closeout-cards workflow. Use initialize-network-state instead for first-time setup, profile adoption, GitHub private repository onboarding, or adding another device. Do not use for generic networking explanations unrelated to the user's saved environment.
+description: Maintain, query, verify, autonomously update, and privately synchronize an initialized user's network-state records for devices, addresses, host services, ports, domains, TLS, containers, VPN or overlay routes, SSH or other access paths, network topology, and reusable troubleshooting patterns. Use when a task depends on saved facts about the user's own network, when a query, verification, diagnosis, or completed action produces confirmed durable facts that should be recorded without a separate update request, when synchronizing initialized private state, or when confirmed network facts must feed an action-closeout-cards workflow. Use initialize-network-state instead for first-time setup, profile adoption, GitHub private repository onboarding, or adding another device. Do not use for generic networking explanations unrelated to the user's saved environment.
 ---
 
 # Network State
@@ -23,12 +23,23 @@ Never place private state inside this skill directory. Do not create a missing s
 
 Classify the task before acting:
 
-- **Query**: Read only the relevant records and report their verification dates.
-- **Verify**: Run only the minimum necessary read-only checks after identifying the exact source device and target.
-- **Diagnose**: Use saved facts as context; do not persist guesses or transient failures.
-- **Update or delete**: Modify records only when the user explicitly requests a change and the fact is confirmed.
+- **Query**: Read only the relevant records and report their verification dates. Record a confirmed durable correction discovered during the query.
+- **Verify**: Run only the minimum necessary read-only checks after identifying the exact source device and target. Record confirmed durable results.
+- **Diagnose**: Use saved facts as context. Record only a confirmed reusable cause, safe check, remedy, or resulting state; never persist guesses or transient failures.
+- **Update**: Maintain confirmed durable facts as part of the task without requiring a separate update request.
+- **Delete**: Delete a record only when the user explicitly requests deletion and dependent references are handled.
 - **Configure or repair**: Change network or host state only when explicitly authorized. Preserve the current configuration and provide a recovery path when practical.
 - **Share or synchronize**: Treat every populated state directory as private. Synchronize it only to the user's confirmed GitHub private repository.
+
+## Maintain confirmed facts autonomously
+
+- Treat a missing `State update policy` field in an otherwise valid existing profile as `autonomous-confirmed-facts`, and add the field during the next profile write without asking the user to choose a mode.
+- When the current task confirms a stable fact that belongs in the profile, update the relevant record before reporting completion even if the user did not separately ask to update the profile.
+- Respect an explicit instruction not to record facts for the current task.
+- Do not create a write from an inference, stale observation, unverified claim, transient failure, or raw command output.
+- Replace superseded current values rather than preserving a change narrative.
+- Run the validator after every write. When private synchronization is enabled and tracked state changed, commit and normally push the approved files using `references/private-sync.md` without asking for per-update confirmation.
+- Do not create an empty commit when no durable state changed.
 
 ## Load only relevant material
 
@@ -94,7 +105,7 @@ Do not scan a network, probe unrelated hosts, log in remotely, restart services,
 
 When the user asks for status and process cards after a completed network action:
 
-1. Finish any explicitly requested private-profile update using confirmed final facts only.
+1. Autonomously update the private profile with confirmed final durable facts unless the user asked not to record them.
 2. Run `validate_profile.py` and stop if validation fails.
 3. Use `$action-closeout-cards` with only the minimum confirmed facts needed for the result, entry point, runtime location, boundary, verification, architecture path, and troubleshooting entry.
 4. Keep the private profile and project cards separate. Do not copy a complete inventory, topology, raw log, or configuration export into the cards.

@@ -1,7 +1,7 @@
 {
   "name": "network-state-closeout",
-  "version": "0.1.0-pre.4",
-  "description": "Guide private network-state initialization, maintain and privately synchronize verified records, then produce separate status and process closeout cards.",
+  "version": "0.1.0-pre.5",
+  "description": "Guide private network-state initialization, autonomously maintain and privately synchronize verified records, then produce separate status and process closeout cards.",
   "author": {
     "name": "Network State Closeout contributors"
   },
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "Network State + Closeout Cards",
     "shortDescription": "Maintain private network facts and close out completed actions.",
-    "longDescription": "Guide first-time private network-state setup, optionally connect a GitHub private repository with a mandatory latest-state gate, maintain verified records, and turn completed actions into separate status and process cards.",
+    "longDescription": "Guide first-time private network-state setup, optionally connect a GitHub private repository with a mandatory latest-state gate, autonomously maintain confirmed durable records, and turn completed actions into separate status and process cards.",
     "developerName": "Network State Closeout contributors",
     "category": "Productivity",
     "capabilities": [
@@ -28,7 +28,7 @@
     "defaultPrompt": [
       "Use $initialize-network-state to create or adopt my private profile without scanning the network.",
       "Use $initialize-network-state to guide me through connecting a confirmed GitHub private repository.",
-      "Sync my GitHub private network state, update confirmed facts, then write status and process cards.",
+      "Use $network-state to synchronize, answer my request, autonomously record confirmed durable facts, then write status and process cards.",
       "Write closeout cards for the completed action without changing network records."
     ]
   }

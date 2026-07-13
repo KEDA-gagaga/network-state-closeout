@@ -63,11 +63,13 @@ Do not keep:
 
 1. When private synchronization is enabled, complete the clean-worktree and fast-forward-only check in `private-sync.md`.
 2. Read only the files relevant to the request.
-3. Verify the source, target, and evidence for a changed fact.
-4. Write the final confirmed state and remove superseded values.
-5. Remove or update references to a deleted device or service.
-6. Run `scripts/validate_profile.py` against the private state directory.
-7. If validation fails, stop and correct the records before committing, sharing, or synchronizing them.
+3. When the task produces a confirmed durable fact, update it autonomously unless the user asked not to record facts for that task.
+4. Verify the source, target, and evidence for every changed fact.
+5. Write the final confirmed state and remove superseded values.
+6. Delete records only on explicit request, then remove or update dependent references.
+7. Run `scripts/validate_profile.py` against the private state directory.
+8. If validation fails, stop and correct the records before committing, sharing, or synchronizing them.
+9. When synchronization is enabled and tracked state changed, commit and normally push the approved files without requesting per-update confirmation.
 
 ## Command documentation
 

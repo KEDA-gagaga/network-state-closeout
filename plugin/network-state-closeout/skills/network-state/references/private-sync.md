@@ -35,6 +35,8 @@ Do not answer from an unsynchronized local copy after a hard-gate failure.
 
 ## Push a confirmed update
 
+Enabling synchronization with `State update policy: autonomous-confirmed-facts` authorizes routine ordinary commits and pushes of validator-approved state files. Do not request confirmation for each update. Separate authorization is still required to create or replace a repository, change the remote identity, rewrite history, or clean sensitive material from history.
+
 1. Complete the hard gate before editing.
 2. Write only confirmed durable facts.
 3. Run `validate_profile.py`.
@@ -43,6 +45,8 @@ Do not answer from an unsynchronized local copy after a hard-gate failure.
 6. Commit with a concise summary.
 7. Fetch again and verify that the remote branch is contained in local history.
 8. Use a normal push.
+
+Skip the commit and push when no approved state file changed.
 
 ```bash
 git add -- .gitignore profile.md devices.md services.md access-paths.md topology.md troubleshooting.md glossary.md

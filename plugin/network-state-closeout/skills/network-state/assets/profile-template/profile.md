@@ -5,6 +5,7 @@
 - Data classification: private
 - Scope: `<home, lab, small office, or another concise boundary>`
 - Last reviewed: `unknown`
+- State update policy: `autonomous-confirmed-facts`
 - Private GitHub synchronization: `disabled`
 - Git remote name: `none`
 - Default branch: `none`
